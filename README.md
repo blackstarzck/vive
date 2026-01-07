@@ -11,9 +11,8 @@
 - **UI Components**: [Radix UI](https://www.radix-ui.com/), Shadcn UI 기반 (추정)
 
 ### Backend & Database
-- **Database**: PostgreSQL (via [Supabase](https://supabase.com/))
-- **ORM**: [Prisma](https://www.prisma.io/)
-- **Authentication**: [NextAuth.js v5 (Beta)](https://authjs.dev/)
+- **Platform**: [Supabase](https://supabase.com/) (Database, Authentication, Storage)
+- **Client**: `@supabase/supabase-js`, `@supabase/ssr`
 
 ### Tools & Libraries
 - **Forms**: React Hook Form, Zod
@@ -36,7 +35,7 @@ pnpm install
 ### 2. 환경 변수 설정
 
 프로젝트 루트에 `.env` 파일을 생성하고 필요한 환경 변수를 설정해야 합니다.
-(예: `DATABASE_URL`, `NEXTAUTH_SECRET`, `SUPABASE_URL` 등)
+(예: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` 등)
 
 ### 3. 개발 서버 실행
 
@@ -50,5 +49,5 @@ npm run dev
 ## 📂 프로젝트 구조
 
 - `src/`: 소스 코드 디렉토리
-- `supabase/`: Supabase 관련 설정 및 마이그레이션
+- `supabase/`: Supabase 관련 설정
 - `public/`: 정적 파일
