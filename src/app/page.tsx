@@ -7,7 +7,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
+        <div className="container mx-auto flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
             <BookOpen className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">VIVE</span>
@@ -24,7 +24,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="container flex flex-1 flex-col items-center justify-center py-24 text-center">
+      <section className="container mx-auto flex flex-1 flex-col items-center justify-center py-24 text-center">
         <div className="mx-auto max-w-4xl space-y-8">
           <div className="space-y-4">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
@@ -56,7 +56,7 @@ export default function Home() {
 
       {/* Features Section */}
       <section className="border-t bg-muted/50 py-24">
-        <div className="container">
+        <div className="container mx-auto">
           <div className="mx-auto max-w-2xl text-center mb-16">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               어떻게 작동하나요?
@@ -105,7 +105,7 @@ export default function Home() {
 
       {/* Benefits Section */}
       <section className="py-24">
-        <div className="container">
+        <div className="container mx-auto">
           <div className="mx-auto max-w-2xl text-center mb-16">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               왜 VIVE인가요?
@@ -134,7 +134,7 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="border-t bg-primary py-16">
-        <div className="container text-center">
+        <div className="container mx-auto text-center">
           <h2 className="text-2xl font-bold text-primary-foreground sm:text-3xl">
             지금 바로 시작하세요
           </h2>
@@ -152,7 +152,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t py-8">
-        <div className="container flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <div className="container mx-auto flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center space-x-2">
             <BookOpen className="h-5 w-5 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">VIVE</span>
