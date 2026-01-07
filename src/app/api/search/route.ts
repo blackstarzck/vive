@@ -1,32 +1,13 @@
 import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
-import { answerFromHighlights, generateEmbedding } from "@/lib/openai";
 import { z } from "zod";
 import { Book, Highlight, Topic } from "@/types/database";
 
 const searchSchema = z.object({
   query: z.string().min(1, "Query is required"),
-  useAI: z.boolean().default(true),
 });
 
-// Helper function to calculate cosine similarity
-function cosineSimilarity(a: number[], b: number[]): number {
-  if (a.length !== b.length) return 0;
-  
-  let dotProduct = 0;
-  let normA = 0;
-  let normB = 0;
-  
-  for (let i = 0; i < a.length; i++) {
-    dotProduct += a[i] * b[i];
-    normA += a[i] * a[i];
-    normB += b[i] * b[i];
-  }
-  
-  return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
-}
-
-// POST /api/search - Search highlights and optionally get AI answer
+// POST /api/search - Search highlights (Text-based only)
 export async function POST(request: Request) {
   try {
     const supabase = await createServerSupabaseClient();
@@ -38,7 +19,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { query, useAI } = searchSchema.parse(body);
+    const { query } = searchSchema.parse(body);
 
     // Get all user highlights
     const { data: highlights } = await supabase
@@ -92,77 +73,19 @@ export async function POST(request: Request) {
       topics: topicsByHighlight.get(h.id) || [],
     }));
 
-    // First, do text-based search as fallback
+    // Text-based search
     const textMatches = highlightsWithRelations.filter(
       (h) =>
         h.content.toLowerCase().includes(query.toLowerCase()) ||
         (h.note && h.note.toLowerCase().includes(query.toLowerCase()))
     );
 
-    let relevantHighlights: typeof highlightsWithRelations = [];
-
-    // If we have highlights with embeddings, do semantic search
-    const highlightsWithEmbeddings = highlightsWithRelations.filter(
-      (h) => h.embedding && h.embedding.length > 0
-    );
-
-    if (highlightsWithEmbeddings.length > 0) {
-      // Generate embedding for the query
-      const queryEmbedding = await generateEmbedding(query);
-
-      // Calculate similarity scores
-      const scoredHighlights = highlightsWithEmbeddings.map((h) => ({
-        highlight: h,
-        similarity: cosineSimilarity(queryEmbedding, h.embedding!),
-      }));
-
-      // Sort by similarity and take top results
-      scoredHighlights.sort((a, b) => b.similarity - a.similarity);
-      relevantHighlights = scoredHighlights
-        .slice(0, 10)
-        .filter((s) => s.similarity > 0.3)
-        .map((s) => s.highlight);
-    }
-
-    // Combine with text matches (deduplicate)
-    const highlightIdSet = new Set(relevantHighlights.map((h) => h.id));
-    for (const match of textMatches) {
-      if (!highlightIdSet.has(match.id)) {
-        relevantHighlights.push(match);
-        highlightIdSet.add(match.id);
-      }
-    }
-
     // Limit to top 10
-    relevantHighlights = relevantHighlights.slice(0, 10);
-
-    let aiAnswer: string | null = null;
-
-    // Generate AI answer if requested and we have relevant highlights
-    if (useAI && relevantHighlights.length > 0) {
-      aiAnswer = await answerFromHighlights(
-        query,
-        relevantHighlights.map((h) => ({
-          content: h.content,
-          note: h.note,
-          bookTitle: h.book.title,
-        }))
-      );
-
-      // Save search history
-      await supabase
-        .from("search_history")
-        .insert({
-          user_id: user.id,
-          query,
-          response: aiAnswer,
-        });
-    }
+    const relevantHighlights = textMatches.slice(0, 10);
 
     return NextResponse.json({
       data: {
         highlights: relevantHighlights,
-        aiAnswer,
         totalResults: relevantHighlights.length,
       },
     });
