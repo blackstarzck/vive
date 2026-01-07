@@ -71,10 +71,10 @@ export function HighlightForm({ highlight, onSuccess, onCancel }: HighlightFormP
 
       // Convert types for API
       const payload = {
-        book_id: values.bookId,
+        bookId: values.bookId,
         content: values.content,
         note: values.note || undefined,
-        page_number: values.pageNumber ? parseInt(values.pageNumber) : undefined,
+        pageNumber: values.pageNumber ? parseInt(values.pageNumber) : undefined,
         chapter: values.chapter || undefined,
         color: values.color || undefined,
       }

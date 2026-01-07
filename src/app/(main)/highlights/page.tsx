@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator"
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -74,6 +75,9 @@ export default function HighlightsPage() {
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
               <DialogTitle>새 하이라이트 추가</DialogTitle>
+              <DialogDescription>
+                책의 인상 깊은 구절을 기록하고 관리하세요.
+              </DialogDescription>
             </DialogHeader>
             <HighlightForm 
               onSuccess={() => {
